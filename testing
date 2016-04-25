@@ -1,0 +1,154 @@
+#Simple print statements
+print("oh hai!");
+print("it works?");
+print("4 + 4 = ");
+print((4+4));
+
+#class
+class ThisIsAClass:
+	#Object (int) within the class
+	int_age = 30;
+
+#Make an int
+aNumber = 44;
+#Make a String
+aWord = "word";
+#Mirrors substring
+#print(aWord[0:2]);
+aWord = aWord[0:2];
+#print stuff
+print(aWord);
+print(aNumber);
+#Create an int
+int_total = 44;
+#Deletes a total
+del int_total;
+bob = True;
+#Make a new list
+list_Names = ["Pat", 55, "John", 22, True];
+print(list_Names);
+#Print one item from the list
+print(list_Names[1]);
+#Append an item to the list
+list_Names.append("bobbbb");
+print(list_Names);
+#Erase all items in the list
+list_Names[:] = [];
+#Make a new int, set to the size of the list_names list
+int_ListSize = list_Names.__sizeof__();
+print("Size of list_Names = ");
+print(int_ListSize);
+#Hashmaps --> Dictionaries
+hash_myDictionary = {"Pat" : 55, "John" : 22, "Larry" : True, "Gary" : "False", "Bob" : ThisIsAClass.int_age};
+print(hash_myDictionary);
+#Print the Keys
+print(hash_myDictionary.keys());
+#Print the values
+print(hash_myDictionary.values());
+hash_smallDictionary = {};
+#Print from the class object
+print(ThisIsAClass.int_age);
+#If Else Statement
+int_age = 27;
+if(int_age >= 21 & int_age < 100):
+	print("Old enough to drink");
+elif (int_age >= 100):
+	print("Super old! Have a beer on me!");
+else:
+	print("Not old enough to drink");
+
+#If else using Strings
+string_Pat = "Pat";
+string_Laura = "Laura";
+if(string_Pat is "pat"):
+	print("Is Pat");
+elif (string_Laura is "Laura"):
+	print("Is Laura");
+else :
+	print("Nothing");
+
+#For Loop
+list_Foods = ["Apple", "Berry", "Banana", "Milk", "Meat", "Chicken"];
+int_counter = 0;
+for string_f in list_Foods:
+	print("Food: " + string_f);
+	print("Length of word (characters) == " + str(len(string_f)));
+	int_counter += 1;
+
+#Print counter variable. (Need to convert to String with str() function, like toString() in Java.
+print("# of loops == " + str(int_counter));
+
+print("\nNew Section\n");
+
+#For loop, use the range function to print out 0-9 with 10 being param
+for int_x in range(10):
+	print("at position: " + str(int_x));
+print("\nNew Section\n");
+#For loop, use the range function to print out 5-10 with 5, 11 being params
+for int_x in range(5, 11):
+	print("at position: " + str(int_x));
+print("\nNew Section\n");
+
+#While loop
+int_whileCounter = 0;
+while int_whileCounter < 10:
+	print("whileCounter = " + str(int_whileCounter));
+	#To print a String with an int, can use str(), but can also use:
+	print("WhileCounter = " , int_whileCounter);
+	int_whileCounter += 1;
+
+print("\nNew Section\n");
+
+#Nested if statement, continue, break
+for int_x2 in range(101):
+	if(int_x2 % 5 == 0):
+		if(int_x2 != 0):
+			print("Divisible by 5");
+			break;
+	else:
+		print("Current Number", int_x2);
+		continue;
+
+print("\nNew Section\n");
+
+#More continue examples
+list_numbersTaken = [2, 5, 12, 13, 17];
+for int_x3 in range(1, 20):
+	if int_x3 in list_numbersTaken:
+		continue;
+	print("Available Number", int_x3);
+
+print("\nNew Section\n");
+
+#Functions (Defining a function begins with def)
+def doubleMyAge(int_x):
+	return (int_x * 2);
+
+def convertBitCoinToDollar(float_BTC):
+	int_amount = (float_BTC) * 527;
+	return int_amount;
+
+print(convertBitCoinToDollar(2.2));
+
+print("\nNew Section\n");
+
+#Note, '==' is for value equality comparison and 'is' is for reference equality
+#http://stackoverflow.com/questions/132988/is-there-a-difference-between-and-is-in-python
+#Remember to use 'or' instead of ||
+#Defining the argument within the declaration gives it a default value
+def getGender(string_gender="na"):
+	string_gender = string_gender.lower();
+	if(string_gender == "m" or string_gender == "male"):
+		print("Male");
+	elif(string_gender == "f" or string_gender == "female"):
+		print("Female");
+	elif(string_gender == "na"):
+		print("Null passed");
+	else:
+		print("No identifiable gender passed");
+
+getGender("f");
+getGender();
+
+print("\nNew Section\n");
+
