@@ -1,3 +1,10 @@
+#Imports (See imports section below for info)
+import random;
+import urllib;
+import urllib.request;
+from bs4 import BeautifulSoup;
+import requests;
+
 #Simple print statements
 print("oh hai!");
 print("it works?");
@@ -135,7 +142,7 @@ print("\nNew Section\n");
 #Note, '==' is for value equality comparison and 'is' is for reference equality
 #http://stackoverflow.com/questions/132988/is-there-a-difference-between-and-is-in-python
 #Remember to use 'or' instead of ||
-#Defining the argument within the declaration gives it a default value
+#Defining the argument within the declaration gives it a default value. Useful to prevent null pointers
 def getGender(string_gender="na"):
 	string_gender = string_gender.lower();
 	if(string_gender == "m" or string_gender == "male"):
@@ -147,8 +154,162 @@ def getGender(string_gender="na"):
 	else:
 		print("No identifiable gender passed");
 
-getGender("f");
-getGender();
+getGender("f"); #Should print female pattern
+getGender(); #Should print default null or na pattern
 
 print("\nNew Section\n");
 
+#Misc
+#Don't forget, you can add an r in front to prevent multiple escape characters
+string_ss = r"this\doesn'tneed\ any escapes\\n";
+
+int_a = 7777;
+
+#Null / None
+def func1(string_Name = "test", string_test2 = "oh hai!"):
+	#Checking for null (or none)
+	if(string_test2 is None):
+		print("test2 is null/ none");
+	print("func2", int_a, string_test2);
+
+func1();
+func1(None, "nope");
+
+print("\nNew Section\n");
+
+#Passing in undetermined number of args
+def addNumbers(*int_args):
+	int_total = 0;
+	for int_a1 in int_args:
+		int_total += int_a1;
+	return int_total;
+
+print(addNumbers(44, 44, 12, 22, 33));
+
+print("\nNew Section\n");
+
+#Optional parameters must be right to left. If you make age optional by adding a default = 0, so too must the rest follow
+def healthCalculator(int_age, int_applesEaten, int_cigsSmoked = 0):
+	int_answer = (100-int_age) + (int_applesEaten * 1.05) - (int_cigsSmoked * 1.77);
+	return int_answer;
+list_myData = [30, 5, 0];
+print(list_myData);
+#Passing the list details individually items via pulling from the list (array)
+print("You will live to the ripe old age of: " + str(healthCalculator(list_myData[0], list_myData[1], list_myData[2])))
+#A better way to do this as it passes the entire list
+print("You will live to the ripe old age of: " + str(healthCalculator(*list_myData)))
+
+print("\nNew Section\n");
+
+#Sets. They cannot have duplicates so at runtime, this will exclude the second milk.
+#NOTE: Sets DO NOT Maintain an order, it does not maintain an order
+set_groceries = {"Cereal", "Milk", "Fruit Snacks", "Popcicles", "Milk"};
+print(set_groceries);
+#Checking within a set
+if ("Milk" in set_groceries):
+	print("You already have milk!");
+else:
+	print("You don't have milk, adding it to the list");
+
+print("\nNew Section\n");
+
+#Dictionaries (Hashmaps). DOES NOT MAINTAIN AN ORDER, but WILL keep pair matching
+dictionary_classmates = {"Pat" : "Cool guy", "Bob" : "Kind of a nerd" , "Emma" : "Cute", "Sophie" : "RUDE"};
+print(dictionary_classmates);
+#Loop through dictionary
+for key_k, value_v in dictionary_classmates.items():
+	print(str(key_k), "-", str(value_v));
+
+print("\nNew Section\n");
+
+#Modules - These are similar to Utility methods in a separate class with a ton of methods
+#Referencing UtilityMethods.py, importing it here
+import UtilityMethods
+
+UtilityMethods.m("print me!", "Please", 2, True);
+UtilityMethods.mSameLine("print me!", "Please", 2, True);
+
+print("\nNew Section\n");
+
+#Using a lib
+def downloadWebImage(string_url):
+	#int_randomInt = random.randrange(1, 1000);
+	int_randomInt = 10;
+	string_fullName = str(int_randomInt) + ".jpg";
+	urllib.request.urlretrieve(string_url, string_fullName);
+
+#Download an image from the web using the urllib.request import. Commented out for now
+string_urlToDownload = "https://yt3.ggpht.com/--n5ELY2uT-U/AAAAAAAAAAI/AAAAAAAAAAA/d9JvaIEpstw/s88-c-k-no-rj-c0xffffff/photo.jpg";
+#downloadWebImage(string_urlToDownload);
+
+print("\nNew Section\n");
+
+#Print to a file
+string_nameOfTextFile = "myText.txt";
+#w for write, r for read
+file_fw = open(string_nameOfTextFile, "w");
+#Write the data, NOTE! this will erase and rewrite, not append
+file_fw.write("Write some data here to the text file\nSound good?");
+file_fw.write("\nMoar Data!");
+#Don't forget to close it
+file_fw.close();
+
+#Read the data
+file_fr = open(string_nameOfTextFile, "r");
+string_text = file_fr.read();
+print(string_text);
+#Don't forget to close it
+file_fr.close();
+
+print("\nNew Section\n");
+
+#New Function to download data
+def downloadCSVData(string_CSVUrl):
+	buffer_Response = urllib.request.urlopen(string_CSVUrl);
+	object_csv = buffer_Response.read();
+	#Convert it to a String
+	string_csv = str(object_csv);
+	object_lines = string_csv.split("\\n");
+	#Print to a file
+	string_nameOfTextFile = "myText.txt";
+	#w for write, r for read
+	file_fw = open(string_nameOfTextFile, "w");
+	#Write the data, NOTE! this will erase and rewrite, not append
+	for aLine in object_lines:
+		file_fw.write(aLine + "\n");
+
+
+	#Don't forget to close it
+	file_fw.close();
+	#return string_csv;
+
+#CSV sample (from Yahoo finance)
+string_myCSVUrl = "http://real-chart.finance.yahoo.com/table.csv?s=GOOG&a=07&b=19&c=2004&d=03&e=26&f=2016&g=d&ignore=.csv";
+downloadCSVData(string_myCSVUrl);
+
+print("\nNew Section\n");
+
+#Web Crawler Section
+#Spider creation first
+def tradeSpider(int_maxPages):
+
+	int_currentResults = 1;
+
+	while int_currentResults < (int_maxPages + 1):
+		string_Url = "http://www.newegg.com/Product/ProductList.aspx?Submit=ENE&N=100007625&IsNodeId=1&bop=And&ActiveSearchResult=True&SrchInDesc=amd&PageSize=30&Page=" + str(int_currentResults);
+
+		object_returnedResults = requests.get(string_Url);
+		response_requestString = object_returnedResults.text;
+		soupObject = BeautifulSoup(response_requestString, "html.parser");
+
+		int_counter = 0;
+		for object_link in soupObject.findAll('span', {'class' : 'itemDescription'}):
+			string_href = object_link.text;
+			print(string_href);
+			#print("At position", int_counter);
+			int_counter+=1;
+
+		#Make sure to increment the results or be stuck in a perma-loop.
+		int_currentResults += 10;
+
+tradeSpider(2);
