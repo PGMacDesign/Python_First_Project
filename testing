@@ -4,6 +4,8 @@ import urllib;
 import urllib.request;
 from bs4 import BeautifulSoup;
 import requests;
+import time
+from datetime import datetime
 
 #Simple print statements
 print("oh hai!");
@@ -289,13 +291,32 @@ downloadCSVData(string_myCSVUrl);
 
 print("\nNew Section\n");
 
-#Web Crawler Section
+class neweggObject:
+	def __init__(self, string_imageUrl = "",
+	             string_productName = "",
+	             string_productUrl = "",
+	             string_productRating = "0",
+	             string_productRatingUrl = "",
+	             string_productPrice = "$",
+	             string_currentDate ="N/A"):
+		self.string_imageUrl = string_imageUrl;
+		self.string_productUrl = string_productUrl;
+		self.string_productName = string_productName;
+		self.string_productRating = string_productRating;
+		self.string_productRatingUrl = string_productRatingUrl;
+		self.string_productPrice = string_productPrice;
+		self.string_currentDate = string_currentDate;
+
+#Web Crawler Section #
 #Spider creation first
 def tradeSpider(int_maxPages):
-
+	# Using the time import to set a date (import time up top)
 	int_currentResults = 1;
 
-	while int_currentResults < (int_maxPages + 1):
+	# List of neweggObjects that will be appended to
+	list_neweggObjects = [];
+
+	while int_currentResults <= (int_maxPages):
 		string_Url = "http://www.newegg.com/Product/ProductList.aspx?Submit=ENE&N=100007625&IsNodeId=1&bop=And&ActiveSearchResult=True&SrchInDesc=amd&PageSize=30&Page=" + str(int_currentResults);
 
 		object_returnedResults = requests.get(string_Url);
@@ -303,13 +324,103 @@ def tradeSpider(int_maxPages):
 		soupObject = BeautifulSoup(response_requestString, "html.parser");
 
 		int_counter = 0;
-		for object_link in soupObject.findAll('span', {'class' : 'itemDescription'}):
-			string_href = object_link.text;
-			print(string_href);
-			#print("At position", int_counter);
-			int_counter+=1;
+		#for object_productList in soupObject.findAll('span', {'class' : 'itemDescription'}):
+		# This loops through the stuff under the product list heading
+		for object_productList in soupObject.findAll('div', {'unbxdattr' : 'product'}):
 
-		#Make sure to increment the results or be stuck in a perma-loop.
-		int_currentResults += 10;
+			# Empty params to be used in the object
+			string_imageUrl = None;
+			string_productUrl = None;
+			string_productName = None;
+			string_productRating = None;
+			string_productRatingUrl = None;
+			string_productPrice = None;
 
-tradeSpider(2);
+			# This will cover the product Url and Name
+			for object_individualItem in object_productList.findAll('a', {'class' : 'itemImage'}):
+				object_href = object_individualItem.get("href");
+				object_title = object_individualItem.get("title");
+				string_productUrl = "Product Url: " + object_href;
+				string_productName = "Product Name: " + object_title;
+
+				#This will cover the produt image url
+				for object_imageDetails in object_individualItem.findAll('img'):
+					object_image = object_imageDetails.get("src");
+					string_imageUrl = "Image Url: " + object_image;
+
+			# This will cover the ratings
+			for object_individualItem in object_productList.findAll('a', {'class' : 'itemRating'}):
+				object_rating = object_individualItem.get("title");
+				string_productRating = "Rating: " + str(object_rating);
+				string_productRating = string_productRating.replace("Rating + " , "");
+				object_ratingUrl = object_individualItem.get("href");
+				string_productRatingUrl = "Reviews: " + str(object_ratingUrl);
+
+			# This will cover the Price information
+			for object_individualItem in object_productList.findAll('div', {'class' : 'itemAction'}):
+				for object_individualItem2 in object_individualItem.findAll('li', {'class' : "price-current"}):
+					# object_priceDollar = object_individualItem2.get("strong");
+					# object_priceCents = object_individualItem2.get("sup");
+					object_priceAmount = object_individualItem2.text;
+					string_s1 = str(object_priceAmount);
+					string_s1 = string_s1.replace("-", "");
+					string_s1 = string_s1.replace("_", "");
+					string_s1 = string_s1.replace("from", "");
+					string_s1 = string_s1.strip();
+					string_s1 = string_s1[:6];
+					string_s1 = "Current Price: " + string_s1;
+					string_productPrice = string_s1;
+
+			'''
+			Get the current date to set for logging purposes
+			Importing: 'from datetime import datetime'
+			The format matches this: '2013/10/05 00:20:30'
+			'''
+			date_currentDate = datetime.now();
+			string_currentDate = date_currentDate.strftime("%Y/%m/%d %H:%M:%S");
+			string_currentDate = "Data Retrieved: " + str(string_currentDate);
+
+			# Add the Strings to a new object
+			neweggObject_currentObject = neweggObject(string_imageUrl,
+			                                          string_productName,
+			                                          string_productUrl,
+			                                          string_productRating,
+			                                          string_productRatingUrl,
+			                                          string_productPrice,
+			                                          string_currentDate);
+			# Append it to the list of objects
+			list_neweggObjects.append(neweggObject_currentObject);
+
+		# Make sure to increment the results or be stuck in a perma-loop.
+		int_currentResults += 1;
+
+	return list_neweggObjects;
+
+# Get a list of newegg Objects on pages 1 and 2
+list_neweggObjects = tradeSpider(2);
+
+# loop through and print the obejcts to test
+for neweggObject in list_neweggObjects:
+	print(neweggObject.string_productName);
+	print(neweggObject.string_productUrl);
+	print(neweggObject.string_imageUrl);
+	print(neweggObject.string_productRating);
+	print(neweggObject.string_productRatingUrl);
+	print(neweggObject.string_productPrice);
+	print(neweggObject.string_currentDate);
+	print("\n");
+
+print("\nNew Section\n");
+
+"""
+This is how to write a block, multi-line comment. Can either be one or two quotation marks btw
+"""
+
+# How to make a 'perma' / Dynamic web cralwer
+def getSingleItemData(string_itemUrl):
+	# Do stuff
+	return 2;
+
+
+# Call perma web crawler
+getSingleItemData("rrr");
