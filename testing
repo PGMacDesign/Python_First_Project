@@ -367,7 +367,7 @@ def tradeSpider(int_maxPages):
 					string_s1 = string_s1.replace("_", "");
 					string_s1 = string_s1.replace("from", "");
 					string_s1 = string_s1.strip();
-					string_s1 = string_s1[:6];
+					string_s1 = string_s1[:12]; # Need to fix why this has a trailing underscore. Regex?
 					string_s1 = "Current Price: " + string_s1;
 					string_productPrice = string_s1;
 
@@ -424,3 +424,8 @@ def getSingleItemData(string_itemUrl):
 
 # Call perma web crawler
 getSingleItemData("rrr");
+
+'''
+Currently at:
+https://www.youtube.com/watch?v=pLHejmLB16o&index=27&list=PL6gx4Cwl9DGAcbMi1sH6oAMk4JHw91mC_&spfreload=1
+'''
